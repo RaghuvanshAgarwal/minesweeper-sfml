@@ -2,18 +2,18 @@
 #include "../../header/Time/TimeManager.h"
 #include <iostream>
 #include "../../header/Sound/SoundManager.h"
+#include "../../header/Gameplay/GameplayManager.h"
 
 GameState GameLoop::current_state = GameState::SPLASH_SCREEN;
 
 GameLoop::GameLoop() { initialize(); }
 
-void GameLoop::initialize()
-{
+void GameLoop::initialize() {
     // Create Managers:
     window_manager = new GameWindowManager();
     game_window = window_manager->getGameWindow();
     event_manager = new EventPollingManager(game_window);
-
+    game_play_manager = new Gameplay::GameplayManager(game_window);
     splash_screen_manager = new SplashScreenManager(game_window);
 
     // Initialize Sounds:
@@ -24,58 +24,55 @@ void GameLoop::initialize()
     Time::TimeManager::initialize();
 }
 
-GameLoop::~GameLoop()
-{
+GameLoop::~GameLoop() {
     delete window_manager;
     delete event_manager;
     delete splash_screen_manager;
+    delete game_play_manager;
 }
 
-void GameLoop::update()
-{
+void GameLoop::update() {
     Time::TimeManager::update();
     event_manager->update();
     window_manager->update();
 
-    switch (current_state)
-    {
-    case GameState::SPLASH_SCREEN:
-        splash_screen_manager->update();
-        break;
-    case GameState::MAIN_MENU:
-        break;
-    case GameState::GAMEPLAY:
-        break;
-    case GameState::EXIT:
-        game_window->close();
-        break;
+    switch (current_state) {
+        case GameState::SPLASH_SCREEN:
+            splash_screen_manager->update();
+            break;
+        case GameState::MAIN_MENU:
+            break;
+        case GameState::GAMEPLAY:
+            game_play_manager->render(*game_window);
+            break;
+        case GameState::EXIT:
+            game_window->close();
+            break;
     }
-
 }
 
-void GameLoop::render()
-{
+void GameLoop::render() {
     game_window->clear();
     window_manager->render();
 
-    switch (current_state)
-    {
-    case GameState::SPLASH_SCREEN:
-        splash_screen_manager->render();
-        break;
-    case GameState::MAIN_MENU:
-        break;
-    case GameState::GAMEPLAY:
-        break;
+    switch (current_state) {
+        case GameState::SPLASH_SCREEN:
+            splash_screen_manager->render();
+            break;
+        case GameState::MAIN_MENU:
+            break;
+        case GameState::GAMEPLAY:
+            game_play_manager->render(*game_window);
+            break;
+        default:
+            throw std::runtime_error("Invalid state");
     }
 
     game_window->display();
 }
 
-void GameLoop::run()
-{
-    while (window_manager->isGameWindowOpen())
-    {
+void GameLoop::run() {
+    while (window_manager->isGameWindowOpen()) {
         event_manager->processEvents();
         update();
         render();

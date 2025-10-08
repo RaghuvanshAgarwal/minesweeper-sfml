@@ -28,6 +28,10 @@ add_executable(minesweeper_sfml main.cpp
         source/UI/SplashScreen/SplashScreenManager.cpp
         source/Assets/AssetManager.cpp
         header/Assets/AssetManager.h
+        source/Gameplay/Board.cpp
+        header/Gameplay/Board.h
+        source/Gameplay/GameplayManager.cpp
+        header/Gameplay/GameplayManager.h
 )
 target_compile_features(minesweeper_sfml PRIVATE cxx_std_17)
 target_link_libraries(minesweeper_sfml PRIVATE sfml-graphics sfml-audio)
