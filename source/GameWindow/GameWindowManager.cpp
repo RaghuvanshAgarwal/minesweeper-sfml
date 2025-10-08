@@ -1,5 +1,7 @@
 #include "../../header/GameWindow/GameWindowManager.h"
 
+#include <iostream>
+
 namespace GameWindow
 {
 	GameWindowManager::GameWindowManager() { initialize(); }
@@ -9,6 +11,8 @@ namespace GameWindow
 	void GameWindowManager::initialize()
 	{
 		game_window = createGameWindow();
+		std::cout << game_window->getSize().x << std::endl;
+		std::cout << game_window->getSize().y << std::endl;
 		setFrameRate(frame_rate);
 	}
 
