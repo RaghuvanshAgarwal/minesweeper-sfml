@@ -5,38 +5,45 @@
 #ifndef MINESWEEPER_SFML_ASSETMANAGER_H
 #define MINESWEEPER_SFML_ASSETMANAGER_H
 #include <string>
+#include <unordered_map>
+
+#include "SFML/Graphics/Texture.hpp"
 
 namespace Asset {
+    enum class SoundType {
+        Background,
+        ButtonClick,
+        Explosion,
+        Flag,
+        GameWon,
+    };
+
+    enum class FontType {
+        BubbleBobble,
+        DsDigib,
+        Roboto,
+    };
+
+    enum class TextureType {
+        Board,
+        Cell,
+        Instruction,
+        MenuButton,
+        MinesweeperBackground,
+        Logo,
+        PlayButton,
+        QuitButton,
+        RestartButton,
+    };
+
     class AssetManager {
+        static std::unordered_map<SoundType, std::string> sounds;
+        static std::unordered_map<FontType, std::string> fonts;
+        static std::unordered_map<TextureType, std::string> textures;
     public:
-        class Fonts {
-        public:
-            static std::string bubble_bobble_font_path_;
-            static std::string ds_digib_font_path_;
-            static std::string roboto_font_path_;
-        };
-
-        class Sounds {
-        public:
-            static std::string background_music_path_;
-            static std::string button_click_sound_path_;
-            static std::string explosion_sound_path_;
-            static std::string flag_sound_path_;
-            static std::string game_won_sound_path_;
-        };
-
-        class Textures {
-        public:
-            static std::string board_texture_path_;
-            static std::string cell_texture_path_;
-            static std::string instructions_texture_path_;
-            static std::string menu_button_texture_path_;
-            static std::string minesweeper_bg_texture_path_;
-            static std::string outscal_logo_texture_path_;
-            static std::string play_button_texture_path_;
-            static std::string quit_button_texture_path_;
-            static std::string restart_button_texture_path_;
-        };
+        static std::string getSound(SoundType p_sound);
+        static std::string getFont(FontType p_font);
+        static std::string getTexture(TextureType p_texture);
     };
 } // Asset
 

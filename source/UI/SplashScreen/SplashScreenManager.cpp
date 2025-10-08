@@ -17,7 +17,7 @@ namespace UI
 
     void SplashScreenManager::initialize()
     {
-        if (!logo_texture.loadFromFile(Asset::AssetManager::Textures::outscal_logo_texture_path_))
+        if (!logo_texture.loadFromFile(Asset::AssetManager::getTexture(Asset::TextureType::Logo)))
             std::cerr << "Failed to load logo texture" << std::endl;
 
         logo_sprite.setTexture(logo_texture);
@@ -44,7 +44,7 @@ namespace UI
         else
         {
             elapsed_time = 0.0f;
-            /*GameLoop::setGameState(GameState::GAMEPLAY);*/
+            //GameLoop::setGameState(GameState::GAMEPLAY);
         }
     }
 }

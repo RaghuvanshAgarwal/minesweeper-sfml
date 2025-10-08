@@ -23,19 +23,19 @@ namespace Sound
 
     void SoundManager::LoadBackgroundMusicFromFile()
     {
-        if (!backgroundMusic.openFromFile(Asset::AssetManager::Sounds::background_music_path_))
+        if (!backgroundMusic.openFromFile(Asset::AssetManager::getSound(Asset::SoundType::Background)))
             std::cerr << "Error loading background music file: " << std::endl;
     }
 
     void SoundManager::LoadSoundFromFile()
     {
-        if (!bufferButtonClick.loadFromFile(Asset::AssetManager::Sounds::button_click_sound_path_))
+        if (!bufferButtonClick.loadFromFile(Asset::AssetManager::getSound(Asset::SoundType::ButtonClick)))
             std::cerr << "Error loading sound file: " << std::endl;
-        if (!bufferFlagSound.loadFromFile(Asset::AssetManager::Sounds::flag_sound_path_))
+        if (!bufferFlagSound.loadFromFile(Asset::AssetManager::getSound(Asset::SoundType::Flag)))
             std::cerr << "Error loading sound file: " << std::endl;
-        if (!bufferExplosion.loadFromFile(Asset::AssetManager::Sounds::explosion_sound_path_))
+        if (!bufferExplosion.loadFromFile(Asset::AssetManager::getSound(Asset::SoundType::Explosion)))
             std::cerr << "Error loading sound file: " << std::endl;
-        if (!bufferGameWon.loadFromFile(Asset::AssetManager::Sounds::game_won_sound_path_))
+        if (!bufferGameWon.loadFromFile(Asset::AssetManager::getSound(Asset::SoundType::GameWon)))
             std::cerr << "Error loading sound file: " << std::endl;
     }
 
