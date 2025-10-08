@@ -1,17 +1,47 @@
 cmake_minimum_required(VERSION 3.28)
-project(CMakeSFMLProject LANGUAGES CXX)
+project("Minesweeper SFML" LANGUAGES CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 include(FetchContent)
 FetchContent_Declare(SFML
-    GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 3.0.2
-    GIT_SHALLOW ON
-    EXCLUDE_FROM_ALL
-    SYSTEM)
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG 2.6.x
+        GIT_SHALLOW ON
+        EXCLUDE_FROM_ALL
+        SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp)
-target_compile_features(main PRIVATE cxx_std_17)
-target_link_libraries(main PRIVATE SFML::Graphics)
+add_executable(minesweeper_sfml main.cpp
+        header/Event/EventPollingManager.h
+        header/GameLoop/GameLoop.h
+        header/GameWindow/GameWindowManager.h
+        header/Sound/SoundManager.h
+        header/Time/TimeManager.h
+        header/UI/SplashScreen/SplashScreenManager.h
+        source/Event/EventPollingManager.cpp
+        source/GameLoop/GameLoop.cpp
+        source/GameWindow/GameWindowManager.cpp
+        source/Sound/SoundManager.cpp
+        source/Time/TimeManager.cpp
+        source/UI/SplashScreen/SplashScreenManager.cpp
+        source/Assets/AssetManager.cpp
+        header/Assets/AssetManager.h
+)
+target_compile_features(minesweeper_sfml PRIVATE cxx_std_17)
+target_link_libraries(minesweeper_sfml PRIVATE sfml-graphics sfml-audio)
+set_target_properties(minesweeper_sfml PROPERTIES
+        VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)
+target_compile_definitions(minesweeper_sfml PRIVATE
+        PROJECT_ROOT="${CMAKE_SOURCE_DIR}/"
+)
+
+if(WIN32)
+    add_custom_command(
+            TARGET main
+            COMMENT "Copy OpenAL DLL"
+            PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:main>
+            VERBATIM)
+endif()
