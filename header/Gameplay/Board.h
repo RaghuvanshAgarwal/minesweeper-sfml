@@ -39,6 +39,9 @@ namespace Gameplay {
         void createBoard();
         void populateBoard();
         void populateMines();
+        int countMinesAround(sf::Vector2i p_cell_position);
+        void populateCells();
+        bool isValidCellPosition(sf::Vector2i p_cell_position);
 
     public:
         explicit Board(sf::RenderWindow* window);

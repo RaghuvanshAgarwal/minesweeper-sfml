@@ -39,7 +39,6 @@ namespace Gameplay {
         for (int i = 0; i < number_of_rows; i++) {
             for (int j = 0; j < number_of_columns; j++) {
                 cellGrid_[i][j] = new Cell(cell_width, cell_height, sf::Vector2i(i, j));
-                cellGrid_[i][j]->setState(CellState::Opened);
             }
         }
         populateBoard();
@@ -47,6 +46,7 @@ namespace Gameplay {
 
     void Board::populateBoard() {
         populateMines();
+        populateCells();
     }
 
     void Board::populateMines() {
@@ -60,6 +60,37 @@ namespace Gameplay {
             cellGrid_[x][y]->setType(CellType::Mine);
             mines++;
         }
+    }
+
+    int Board::countMinesAround(sf::Vector2i p_cell_position) {
+        int mines = 0;
+        const int start_x = p_cell_position.x - 1;
+        const int start_y = p_cell_position.y - 1;
+        for (int i = start_x; i <= start_x + 2; i++) {
+            for (int j = start_y; j <= start_y + 2; j++) {
+                if (isValidCellPosition({i,j})) {
+                    if (cellGrid_[i][j]->getType() == CellType::Mine) {
+                        mines++;
+                    }
+                }
+            }
+        }
+        std::cout << std::endl;
+        return mines;
+    }
+
+    void Board::populateCells() {
+        for (int i = 0; i < number_of_rows; i++) {
+            for (int j = 0; j < number_of_columns; j++) {
+                if (cellGrid_[i][j]->getType() == CellType::Mine) continue;
+                int mines = countMinesAround(sf::Vector2i(i, j));
+                cellGrid_[i][j]->setType(static_cast<CellType>(mines));
+            }
+        }
+    }
+
+    bool Board::isValidCellPosition(sf::Vector2i p_cell_position) {
+        return p_cell_position.x >= 0 && p_cell_position.x < number_of_columns && p_cell_position.y >= 0 && p_cell_position.y < number_of_rows;
     }
 
     Board::Board(sf::RenderWindow *window) {
