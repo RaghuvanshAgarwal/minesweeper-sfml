@@ -14,14 +14,17 @@ namespace Gameplay {
             throw std::runtime_error("Failed to load board image!");
         }
         sprite_.setTexture(texture_);
-        const float scale = static_cast<float>(window->getSize().y) / static_cast<float>(texture_.getSize().y);
-        sprite_.setScale(scale, scale);
-        const float posX = (static_cast<float>(window->getSize().x) - sprite_.getGlobalBounds().width) / 2.0f;
-        sprite_.setPosition(posX,0);
+        sprite_.setPosition(boardPosition, 0);
+        sprite_.setScale(boardWidth / texture_.getSize().x,boardHeight / texture_.getSize().y);
     }
 
     void Board::initialize(sf::RenderWindow* window) {
         initializeBoardImage(window);
+        createBoard();
+    }
+
+    void Board::createBoard() {
+        cell_ = new Cell(83,83,sf::Vector2i(0,0));
     }
 
     Board::Board(sf::RenderWindow* window) {
@@ -29,7 +32,8 @@ namespace Gameplay {
     }
 
 
-    void Board::render(sf::RenderWindow &window) {
+    void Board::render(sf::RenderWindow &window) const {
         window.draw(sprite_);
+        cell_->render(window);
     }
 } // Gameplay
