@@ -31,11 +31,14 @@ namespace Gameplay {
         sf::Vector2i position_;
         const int tile_size_ = 128;
         const int slice_count_ = 12;
+        const float cell_top_offset_ = 274.f;
+        const float cell_left_offset_ = 583.f;
         UIElements::Button* button_{};
         CellState state_ = CellState::Hidden;
         CellType type_ = CellType::Empty;
 
         void initialize(float p_width,float p_height, sf::Vector2i p_position);
+        sf::Vector2f getScreenPosition() const;
         void updateTextureRect();
         public:
         Cell(float p_width,float p_height, sf::Vector2i p_position);
