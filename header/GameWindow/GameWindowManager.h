@@ -9,8 +9,8 @@ namespace GameWindow
 		const int frame_rate = 60;
 		const std::string game_window_title = "Outscal Presents - Minesweeper";
 
-		const int game_window_width = 1280;
-		const int game_window_height = 720;
+		const int game_window_width = 1920;
+		const int game_window_height = 1080;
 
 		sf::RenderWindow* game_window;
 		sf::VideoMode video_mode;

@@ -14,14 +14,30 @@ namespace Gameplay {
             throw std::runtime_error("Failed to load board image!");
         }
         sprite_.setTexture(texture_);
-        const float scale = static_cast<float>(window->getSize().y) / static_cast<float>(texture_.getSize().y);
-        sprite_.setScale(scale, scale);
-        const float posX = (static_cast<float>(window->getSize().x) - sprite_.getGlobalBounds().width) / 2.0f;
-        sprite_.setPosition(posX,0);
+        sprite_.setPosition(board_position_, 0);
+        sprite_.setScale(board_width_ / texture_.getSize().x,board_height_ / texture_.getSize().y);
     }
 
     void Board::initialize(sf::RenderWindow* window) {
         initializeBoardImage(window);
+        createBoard();
+    }
+
+    float Board::getCellWidth() const {
+        return (board_width_ - horizontal_cell_padding_) / number_of_columns;
+    }
+
+    float Board::getCellHeight() const {
+        return (board_height_ - vertical_cell_padding_) / number_of_rows;
+    }
+
+    void Board::createBoard() {
+        const float cell_width = getCellWidth();
+        const float cell_height = getCellHeight();
+
+        for (int i = 0; i < number_of_rows; i++) {
+            cell_[i] = new Cell(cell_width,cell_height,sf::Vector2i(i,0));
+        }
     }
 
     Board::Board(sf::RenderWindow* window) {
@@ -29,7 +45,10 @@ namespace Gameplay {
     }
 
 
-    void Board::render(sf::RenderWindow &window) {
+    void Board::render(sf::RenderWindow &window) const {
         window.draw(sprite_);
+        for (int i = 0; i < number_of_rows; i++) {
+            cell_[i]->render(window);
+        }
     }
 } // Gameplay
