@@ -18,6 +18,10 @@ namespace UIElements {
         initialize(p_texture_path, p_position, p_size);
     }
 
+    void Button::setTextureRect(const sf::IntRect &p_texture_rect) {
+        sprite_.setTextureRect(p_texture_rect);
+    }
+
     void Button::render(sf::RenderWindow &window) const {
         window.draw(sprite_);
     }

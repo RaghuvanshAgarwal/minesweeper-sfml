@@ -20,6 +20,7 @@ namespace UIElements {
 
     public:
         Button(const std::string& p_texture_path, const sf::Vector2f& p_position, const sf::Vector2f& p_size);
+        void setTextureRect(const sf::IntRect& p_texture_rect);
         void render(sf::RenderWindow& window) const;
     };
 } // UIElements
