@@ -36,6 +36,8 @@ namespace Gameplay {
         UIElements::Button* button_{};
         CellState state_ = CellState::Hidden;
         CellType type_ = CellType::Empty;
+        float cell_height_ = 0.f;
+        float cell_width_ = 0.f;
 
         void initialize(float p_width,float p_height, sf::Vector2i p_position);
         sf::Vector2f getScreenPosition() const;

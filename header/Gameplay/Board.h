@@ -9,10 +9,7 @@
 
 namespace Gameplay {
     class Board {
-        sf::Texture texture_;
-        sf::Sprite sprite_;
 
-        Cell* cell_;
 
         const float board_width_ = 866.f;
         const float board_height_ = 1080.f;
@@ -22,6 +19,9 @@ namespace Gameplay {
         const float horizontal_cell_padding_ = 115.f;
         const float vertical_cell_padding_ = 329.f;
 
+        sf::Texture texture_;
+        sf::Sprite sprite_;
+        Cell* cell_[number_of_columns];
         void initializeBoardImage(const sf::RenderWindow* window);
         void initialize(sf::RenderWindow* window);
 

@@ -9,14 +9,16 @@
 namespace Gameplay {
     void Cell::initialize(float p_width, float p_height, sf::Vector2i p_position) {
         position_ = p_position;
+        cell_width_ = p_width;
+        cell_height_ = p_height;
         button_ = new UIElements::Button(Asset::AssetManager::getTexture(Asset::TextureType::Cell), getScreenPosition(), {p_width * slice_count_,p_height});
         setState(CellState::Hidden);
         setType(CellType::Empty);
     }
 
     sf::Vector2f Cell::getScreenPosition() const {
-        float xScreenPosition = cell_left_offset_;
-        float yScreenPosition = cell_top_offset_;
+        float xScreenPosition = cell_left_offset_ + (position_.x * cell_width_);
+        float yScreenPosition = cell_top_offset_ + (position_.y * cell_height_);
         return sf::Vector2f(xScreenPosition, yScreenPosition);
     }
 

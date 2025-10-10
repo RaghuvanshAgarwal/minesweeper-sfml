@@ -32,7 +32,12 @@ namespace Gameplay {
     }
 
     void Board::createBoard() {
-        cell_ = new Cell(getCellWidth(),getCellHeight(),sf::Vector2i(0,0));
+        const float cell_width = getCellWidth();
+        const float cell_height = getCellHeight();
+
+        for (int i = 0; i < number_of_rows; i++) {
+            cell_[i] = new Cell(cell_width,cell_height,sf::Vector2i(i,0));
+        }
     }
 
     Board::Board(sf::RenderWindow* window) {
@@ -42,6 +47,8 @@ namespace Gameplay {
 
     void Board::render(sf::RenderWindow &window) const {
         window.draw(sprite_);
-        cell_->render(window);
+        for (int i = 0; i < number_of_rows; i++) {
+            cell_[i]->render(window);
+        }
     }
 } // Gameplay
