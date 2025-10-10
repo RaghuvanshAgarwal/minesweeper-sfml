@@ -19,6 +19,7 @@ namespace Gameplay {
     }
 
     void Board::initialize(sf::RenderWindow *window) {
+        generator_.seed(random_device_());
         initializeBoardImage(window);
         createBoard();
     }
@@ -37,8 +38,27 @@ namespace Gameplay {
 
         for (int i = 0; i < number_of_rows; i++) {
             for (int j = 0; j < number_of_columns; j++) {
-                cell_[i][j] = new Cell(cell_width, cell_height, sf::Vector2i(i, j));
+                cellGrid_[i][j] = new Cell(cell_width, cell_height, sf::Vector2i(i, j));
+                cellGrid_[i][j]->setState(CellState::Opened);
             }
+        }
+        populateBoard();
+    }
+
+    void Board::populateBoard() {
+        populateMines();
+    }
+
+    void Board::populateMines() {
+        int mines = 0;
+        std::uniform_int_distribution x_dis (0, number_of_columns - 1);
+        std::uniform_int_distribution y_dis (0, number_of_rows - 1);
+        while (mines < mines_count) {
+            const int x = x_dis(generator_);
+            const int y = y_dis(generator_);
+            if (cellGrid_[x][y]->getType() == CellType::Mine) continue;
+            cellGrid_[x][y]->setType(CellType::Mine);
+            mines++;
         }
     }
 
@@ -49,7 +69,7 @@ namespace Gameplay {
 
     void Board::render(sf::RenderWindow &window) const {
         window.draw(sprite_);
-        for (const auto & i : cell_) {
+        for (const auto & i : cellGrid_) {
             for (const auto j : i) {
                 j->render(window);
             }
