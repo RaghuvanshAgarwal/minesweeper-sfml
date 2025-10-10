@@ -14,8 +14,8 @@ namespace Gameplay {
             throw std::runtime_error("Failed to load board image!");
         }
         sprite_.setTexture(texture_);
-        sprite_.setPosition(boardPosition, 0);
-        sprite_.setScale(boardWidth / texture_.getSize().x,boardHeight / texture_.getSize().y);
+        sprite_.setPosition(board_position_, 0);
+        sprite_.setScale(board_width_ / texture_.getSize().x,board_height_ / texture_.getSize().y);
     }
 
     void Board::initialize(sf::RenderWindow* window) {
@@ -23,8 +23,16 @@ namespace Gameplay {
         createBoard();
     }
 
+    float Board::getCellWidth() const {
+        return (board_width_ - horizontal_cell_padding_) / number_of_columns;
+    }
+
+    float Board::getCellHeight() const {
+        return (board_height_ - vertical_cell_padding_) / number_of_rows;
+    }
+
     void Board::createBoard() {
-        cell_ = new Cell(83,83,sf::Vector2i(0,0));
+        cell_ = new Cell(getCellWidth(),getCellHeight(),sf::Vector2i(0,0));
     }
 
     Board::Board(sf::RenderWindow* window) {

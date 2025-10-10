@@ -14,12 +14,21 @@ namespace Gameplay {
 
         Cell* cell_;
 
-        const float boardWidth = 866.f;
-        const float boardHeight = 1080.f;
-        const float boardPosition = 530.f;
+        const float board_width_ = 866.f;
+        const float board_height_ = 1080.f;
+        const float board_position_ = 530.f;
+        static constexpr int number_of_rows = 9;
+        static constexpr int number_of_columns = 9;
+        const float horizontal_cell_padding_ = 115.f;
+        const float vertical_cell_padding_ = 329.f;
 
         void initializeBoardImage(const sf::RenderWindow* window);
         void initialize(sf::RenderWindow* window);
+
+        float getCellWidth() const;
+
+        float getCellHeight() const;
+
         void createBoard();
 
     public:
