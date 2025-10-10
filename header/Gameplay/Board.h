@@ -21,7 +21,7 @@ namespace Gameplay {
 
         sf::Texture texture_;
         sf::Sprite sprite_;
-        Cell* cell_[number_of_columns];
+        Cell* cell_[number_of_rows][number_of_columns]{};
         void initializeBoardImage(const sf::RenderWindow* window);
         void initialize(sf::RenderWindow* window);
 
@@ -32,7 +32,7 @@ namespace Gameplay {
         void createBoard();
 
     public:
-        Board(sf::RenderWindow* window);
+        explicit Board(sf::RenderWindow* window);
         void render(sf::RenderWindow &window) const;
     };
 } // Gameplay
