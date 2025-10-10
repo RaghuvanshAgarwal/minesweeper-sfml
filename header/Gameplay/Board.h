@@ -4,6 +4,8 @@
 
 #ifndef MINESWEEPER_SFML_BOARD_H
 #define MINESWEEPER_SFML_BOARD_H
+#include <random>
+
 #include "Cell.h"
 #include "SFML/Graphics.hpp"
 
@@ -18,18 +20,28 @@ namespace Gameplay {
         static constexpr int number_of_columns = 9;
         const float horizontal_cell_padding_ = 115.f;
         const float vertical_cell_padding_ = 329.f;
+        std::default_random_engine generator_;
+        std::random_device random_device_;
 
         sf::Texture texture_;
         sf::Sprite sprite_;
-        Cell* cell_[number_of_rows][number_of_columns]{};
+        Cell* cellGrid_[number_of_rows][number_of_columns]{};
+        static constexpr int mines_count = 9;
+
+
+
+
+
         void initializeBoardImage(const sf::RenderWindow* window);
         void initialize(sf::RenderWindow* window);
-
         float getCellWidth() const;
-
         float getCellHeight() const;
-
         void createBoard();
+        void populateBoard();
+        void populateMines();
+        int countMinesAround(sf::Vector2i p_cell_position);
+        void populateCells();
+        bool isValidCellPosition(sf::Vector2i p_cell_position);
 
     public:
         explicit Board(sf::RenderWindow* window);
