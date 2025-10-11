@@ -3,9 +3,6 @@
 //
 
 #include "../../header/Gameplay/GameplayManager.h"
-
-#include <iostream>
-
 #include "../../header/Assets/AssetManager.h"
 #include "../../header/Gameplay/Board.h"
 
@@ -29,6 +26,10 @@ namespace Gameplay {
     GameplayManager::GameplayManager(sf::RenderWindow* window) {
         game_window = window;
         initialize();
+    }
+
+    void GameplayManager::update(Event::EventPollingManager &event_manager, const sf::RenderWindow &window) {
+        board->update(event_manager, window);
     }
 
     void GameplayManager::render(sf::RenderWindow &window) {

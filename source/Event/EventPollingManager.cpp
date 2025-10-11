@@ -66,5 +66,5 @@ namespace Event
 
     bool EventPollingManager::pressedRightMouseButton() { return right_mouse_button_state == MouseButtonState::PRESSED; }
 
-    sf::Vector2i EventPollingManager::getMousePosition() { return sf::Mouse::getPosition(*game_window); }
+    sf::Vector2i EventPollingManager::getMousePosition() const { return sf::Mouse::getPosition(*game_window); }
 }

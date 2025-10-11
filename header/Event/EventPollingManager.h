@@ -1,6 +1,5 @@
 #pragma once
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Window/Event.hpp>
+#include <SFML/Graphics.hpp>
 
 namespace Event
 {
@@ -39,6 +38,6 @@ namespace Event
         bool pressedLeftMouseButton();
         bool pressedRightMouseButton();
 
-        sf::Vector2i getMousePosition();
+        sf::Vector2i getMousePosition() const;
     };
 }

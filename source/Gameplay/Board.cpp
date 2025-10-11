@@ -6,7 +6,9 @@
 
 #include <iostream>
 
+#include "../../header/Gameplay/Cell.h"
 #include "../../header/Assets/AssetManager.h"
+#include "../../header/UI/UIElements/Button/Button.h"
 
 namespace Gameplay {
     void Board::initializeBoardImage(const sf::RenderWindow *window) {
@@ -38,7 +40,7 @@ namespace Gameplay {
 
         for (int i = 0; i < number_of_rows; i++) {
             for (int j = 0; j < number_of_columns; j++) {
-                cellGrid_[i][j] = new Cell(cell_width, cell_height, sf::Vector2i(i, j));
+                cellGrid_[i][j] = new Cell(cell_width, cell_height, sf::Vector2i(i, j), this);
             }
         }
         populateBoard();
@@ -75,7 +77,6 @@ namespace Gameplay {
                 }
             }
         }
-        std::cout << std::endl;
         return mines;
     }
 
@@ -95,6 +96,18 @@ namespace Gameplay {
 
     Board::Board(sf::RenderWindow *window) {
         initialize(window);
+    }
+
+    void Board::onCellButtonClick(sf::Vector2i p_cell_position, UIElements::MouseButtonType p_type) {
+        std::cout << p_cell_position.x << " " << p_cell_position.y << (p_type == UIElements::MouseButtonType::LeftMouseButton ? " Left" : " Right") << std::endl;
+    }
+
+    void Board::update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window) {
+        for (const auto & i : cellGrid_) {
+            for (const auto j : i) {
+                j->update(event_manager, window);
+            }
+        }
     }
 
 
