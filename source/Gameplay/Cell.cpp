@@ -86,6 +86,19 @@ namespace Gameplay {
         setState(CellState::Opened);
     }
 
+    bool Cell::canFlag() const {
+        return getState() != CellState::Opened;
+    }
+
+    void Cell::toggleFlag() {
+        if (getState() == CellState::Hidden) {
+            setState(CellState::Flagged);
+        }
+        else if (getState() == CellState::Flagged) {
+            setState(CellState::Hidden);
+        }
+    }
+
     void Cell::update(Event::EventPollingManager &event_manager, const sf::RenderWindow &window) {
         button_->handleButtonInteractions(event_manager, window);
     }

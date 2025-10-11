@@ -63,6 +63,9 @@ namespace Gameplay {
         bool canOpen() const;
         void open();
 
+        bool canFlag() const;
+        void toggleFlag();
+
 
         void update(Event::EventPollingManager& event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow& window) const;

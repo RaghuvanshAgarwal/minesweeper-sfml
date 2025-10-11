@@ -107,10 +107,23 @@ namespace Gameplay {
         }
     }
 
+    void Board::toggleFlag(sf::Vector2i p_cell_position) {
+        if (isValidCellPosition(p_cell_position)) {
+            if (Cell* cell = cellGrid_[p_cell_position.x][p_cell_position.y]; cell->canFlag()) {
+                cell->toggleFlag();
+                flaggedCells += (cell->getState() == CellState::Flagged ? 1 : -1);
+            }
+        }
+    }
+
     void Board::onCellButtonClick(sf::Vector2i p_cell_position, UIElements::MouseButtonType p_type) {
         if (p_type == UIElements::MouseButtonType::LeftMouseButton) {
             Sound::SoundManager::PlaySound(Sound::SoundType::BUTTON_CLICK);
             openCell(p_cell_position);
+        }
+        else if (p_type == UIElements::MouseButtonType::RightMouseButton) {
+            Sound::SoundManager::PlaySound(Sound::SoundType::FLAG);
+            toggleFlag(p_cell_position);
         }
     }
 

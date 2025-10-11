@@ -33,6 +33,7 @@ namespace Gameplay {
         sf::Sprite sprite_;
         class Cell* cellGrid_[number_of_rows][number_of_columns]{};
         static constexpr int mines_count = 9;
+        int flaggedCells;
 
 
 
@@ -53,6 +54,8 @@ namespace Gameplay {
         Board(sf::RenderWindow* window);
 
         void openCell(sf::Vector2i p_cell_position);
+
+        void toggleFlag(sf::Vector2i p_cell_position);
 
         void onCellButtonClick(sf::Vector2i p_cell_position, UIElements::MouseButtonType p_type);
         void update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window);
