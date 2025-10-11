@@ -71,6 +71,7 @@ namespace Gameplay {
         const int start_y = p_cell_position.y - 1;
         for (int i = start_x; i <= start_x + 2; i++) {
             for (int j = start_y; j <= start_y + 2; j++) {
+                if (p_cell_position.x == j && p_cell_position.y == i) continue;
                 if (isValidCellPosition({i,j})) {
                     if (cellGrid_[i][j]->getType() == CellType::Mine) {
                         mines++;
@@ -100,10 +101,8 @@ namespace Gameplay {
     }
 
     void Board::openCell(sf::Vector2i p_cell_position) {
-        if (isValidCellPosition(p_cell_position)) {
-            if (Cell* cell = cellGrid_[p_cell_position.x][p_cell_position.y]; cell->canOpen()) {
-                cell->open();
-            }
+        if (Cell* cell = cellGrid_[p_cell_position.x][p_cell_position.y]; cell->canOpen()) {
+            processCellType(p_cell_position);
         }
     }
 
@@ -113,6 +112,40 @@ namespace Gameplay {
                 cell->toggleFlag();
                 flaggedCells += (cell->getState() == CellState::Flagged ? 1 : -1);
             }
+        }
+    }
+
+    void Board::processEmtpyCell(sf::Vector2i p_cell_position) {
+        // Handle the clicked cell
+        switch (CellState cell_state = cellGrid_[p_cell_position.x][p_cell_position.y]->getState()) {
+            case CellState::Opened:
+                return;  // Already open, stop here
+            default:
+                cellGrid_[p_cell_position.x][p_cell_position.y]->open();
+        }
+        for (int a = -1; a <= 1; ++a) {
+            for (int b = -1; b <= 1; ++b) {
+                //Store neighbor cells position
+                sf::Vector2i next_cell_position = sf::Vector2i(a + p_cell_position.x, b + p_cell_position.y);
+                if ((a== 0 && b == 0) || !isValidCellPosition(next_cell_position)) continue;
+                if (cellGrid_[next_cell_position.x][next_cell_position.y]->getState() == CellState::Flagged) {
+                    toggleFlag(next_cell_position);
+                }
+                //Open neighbor cell
+                openCell(next_cell_position);  // Open neighbor
+            }
+        }
+    }
+
+    void Board::processCellType(sf::Vector2i p_cell_position) {
+        switch (cellGrid_[p_cell_position.x][p_cell_position.y]->getType()) {
+            case CellType::Empty:
+                processEmtpyCell(p_cell_position);
+                break;
+            case CellType::Mine:
+                break;
+            default:
+                cellGrid_[p_cell_position.x][p_cell_position.y]->open();
         }
     }
 
