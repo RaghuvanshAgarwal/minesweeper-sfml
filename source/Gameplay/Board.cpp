@@ -8,6 +8,7 @@
 
 #include "../../header/Gameplay/Cell.h"
 #include "../../header/Assets/AssetManager.h"
+#include "../../header/Sound/SoundManager.h"
 #include "../../header/UI/UIElements/Button/Button.h"
 
 namespace Gameplay {
@@ -98,8 +99,19 @@ namespace Gameplay {
         initialize(window);
     }
 
+    void Board::openCell(sf::Vector2i p_cell_position) {
+        if (isValidCellPosition(p_cell_position)) {
+            if (Cell* cell = cellGrid_[p_cell_position.x][p_cell_position.y]; cell->canOpen()) {
+                cell->open();
+            }
+        }
+    }
+
     void Board::onCellButtonClick(sf::Vector2i p_cell_position, UIElements::MouseButtonType p_type) {
-        std::cout << p_cell_position.x << " " << p_cell_position.y << (p_type == UIElements::MouseButtonType::LeftMouseButton ? " Left" : " Right") << std::endl;
+        if (p_type == UIElements::MouseButtonType::LeftMouseButton) {
+            Sound::SoundManager::PlaySound(Sound::SoundType::BUTTON_CLICK);
+            openCell(p_cell_position);
+        }
     }
 
     void Board::update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window) {

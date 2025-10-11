@@ -60,6 +60,8 @@ namespace Gameplay {
         [[nodiscard]] CellState getState() const;
         void setState(CellState p_state);
         void setType(CellType p_type);
+        bool canOpen() const;
+        void open();
 
 
         void update(Event::EventPollingManager& event_manager, const sf::RenderWindow& window);

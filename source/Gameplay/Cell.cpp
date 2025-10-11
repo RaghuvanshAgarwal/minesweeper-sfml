@@ -77,6 +77,15 @@ namespace Gameplay {
         type_ = p_type;
         updateTextureRect();
     }
+
+    bool Cell::canOpen() const {
+        return state_ == CellState::Hidden;
+    }
+
+    void Cell::open() {
+        setState(CellState::Opened);
+    }
+
     void Cell::update(Event::EventPollingManager &event_manager, const sf::RenderWindow &window) {
         button_->handleButtonInteractions(event_manager, window);
     }
