@@ -1,6 +1,5 @@
 #include "../../header/Sound/SoundManager.h"
 #include <iostream>
-
 #include "../../header/Assets/AssetManager.h"
 
 namespace Sound

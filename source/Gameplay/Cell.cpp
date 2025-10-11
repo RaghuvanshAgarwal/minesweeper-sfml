@@ -3,6 +3,8 @@
 //
 
 #include "../../header/Gameplay/Cell.h"
+#include "../../header/UI/UIElements/Button/Button.h"
+#include "../../header/Gameplay/Board.h"
 
 #include "../../header/Assets/AssetManager.h"
 
@@ -12,6 +14,7 @@ namespace Gameplay {
         cell_width_ = p_width;
         cell_height_ = p_height;
         button_ = new UIElements::Button(Asset::AssetManager::getTexture(Asset::TextureType::Cell), getScreenPosition(), {p_width * slice_count_,p_height});
+        registerCellButtonCallback();
         setState(CellState::Hidden);
         setType(CellType::Empty);
     }
@@ -19,7 +22,7 @@ namespace Gameplay {
     sf::Vector2f Cell::getScreenPosition() const {
         float xScreenPosition = cell_left_offset_ + (position_.x * cell_width_);
         float yScreenPosition = cell_top_offset_ + (position_.y * cell_height_);
-        return sf::Vector2f(xScreenPosition, yScreenPosition);
+        return {xScreenPosition, yScreenPosition};
     }
 
     void Cell::updateTextureRect() {
@@ -43,7 +46,13 @@ namespace Gameplay {
         button_->setTextureRect(rect);
     }
 
-    Cell::Cell(float p_width, float p_height, sf::Vector2i p_position) {
+    void Cell::registerCellButtonCallback() const {
+        button_->registerCallback([this](UIElements::MouseButtonType p_button) {
+           board_->onCellButtonClick(position_, p_button);
+        });
+    }
+
+    Cell::Cell(float p_width, float p_height, sf::Vector2i p_position, Board* p_board): board_(p_board) {
         initialize(p_width,p_height,p_position);
     }
 
@@ -67,6 +76,31 @@ namespace Gameplay {
     void Cell::setType(CellType p_type) {
         type_ = p_type;
         updateTextureRect();
+    }
+
+    bool Cell::canOpen() const {
+        return state_ == CellState::Hidden;
+    }
+
+    void Cell::open() {
+        setState(CellState::Opened);
+    }
+
+    bool Cell::canFlag() const {
+        return getState() != CellState::Opened;
+    }
+
+    void Cell::toggleFlag() {
+        if (getState() == CellState::Hidden) {
+            setState(CellState::Flagged);
+        }
+        else if (getState() == CellState::Flagged) {
+            setState(CellState::Hidden);
+        }
+    }
+
+    void Cell::update(Event::EventPollingManager &event_manager, const sf::RenderWindow &window) {
+        button_->handleButtonInteractions(event_manager, window);
     }
 
     void Cell::render(sf::RenderWindow &window) const {

@@ -6,7 +6,10 @@
 
 #include <iostream>
 
+#include "../../header/Gameplay/Cell.h"
 #include "../../header/Assets/AssetManager.h"
+#include "../../header/Sound/SoundManager.h"
+#include "../../header/UI/UIElements/Button/Button.h"
 
 namespace Gameplay {
     void Board::initializeBoardImage(const sf::RenderWindow *window) {
@@ -38,7 +41,7 @@ namespace Gameplay {
 
         for (int i = 0; i < number_of_rows; i++) {
             for (int j = 0; j < number_of_columns; j++) {
-                cellGrid_[i][j] = new Cell(cell_width, cell_height, sf::Vector2i(i, j));
+                cellGrid_[i][j] = new Cell(cell_width, cell_height, sf::Vector2i(i, j), this);
             }
         }
         populateBoard();
@@ -75,7 +78,6 @@ namespace Gameplay {
                 }
             }
         }
-        std::cout << std::endl;
         return mines;
     }
 
@@ -95,6 +97,42 @@ namespace Gameplay {
 
     Board::Board(sf::RenderWindow *window) {
         initialize(window);
+    }
+
+    void Board::openCell(sf::Vector2i p_cell_position) {
+        if (isValidCellPosition(p_cell_position)) {
+            if (Cell* cell = cellGrid_[p_cell_position.x][p_cell_position.y]; cell->canOpen()) {
+                cell->open();
+            }
+        }
+    }
+
+    void Board::toggleFlag(sf::Vector2i p_cell_position) {
+        if (isValidCellPosition(p_cell_position)) {
+            if (Cell* cell = cellGrid_[p_cell_position.x][p_cell_position.y]; cell->canFlag()) {
+                cell->toggleFlag();
+                flaggedCells += (cell->getState() == CellState::Flagged ? 1 : -1);
+            }
+        }
+    }
+
+    void Board::onCellButtonClick(sf::Vector2i p_cell_position, UIElements::MouseButtonType p_type) {
+        if (p_type == UIElements::MouseButtonType::LeftMouseButton) {
+            Sound::SoundManager::PlaySound(Sound::SoundType::BUTTON_CLICK);
+            openCell(p_cell_position);
+        }
+        else if (p_type == UIElements::MouseButtonType::RightMouseButton) {
+            Sound::SoundManager::PlaySound(Sound::SoundType::FLAG);
+            toggleFlag(p_cell_position);
+        }
+    }
+
+    void Board::update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window) {
+        for (const auto & i : cellGrid_) {
+            for (const auto j : i) {
+                j->update(event_manager, window);
+            }
+        }
     }
 
 

@@ -5,9 +5,15 @@
 #ifndef MINESWEEPER_SFML_BOARD_H
 #define MINESWEEPER_SFML_BOARD_H
 #include <random>
-
-#include "Cell.h"
 #include "SFML/Graphics.hpp"
+
+namespace Event {
+    class EventPollingManager;
+}
+
+namespace UIElements {
+    enum class MouseButtonType;
+}
 
 namespace Gameplay {
     class Board {
@@ -25,8 +31,9 @@ namespace Gameplay {
 
         sf::Texture texture_;
         sf::Sprite sprite_;
-        Cell* cellGrid_[number_of_rows][number_of_columns]{};
+        class Cell* cellGrid_[number_of_rows][number_of_columns]{};
         static constexpr int mines_count = 9;
+        int flaggedCells;
 
 
 
@@ -44,7 +51,14 @@ namespace Gameplay {
         bool isValidCellPosition(sf::Vector2i p_cell_position);
 
     public:
-        explicit Board(sf::RenderWindow* window);
+        Board(sf::RenderWindow* window);
+
+        void openCell(sf::Vector2i p_cell_position);
+
+        void toggleFlag(sf::Vector2i p_cell_position);
+
+        void onCellButtonClick(sf::Vector2i p_cell_position, UIElements::MouseButtonType p_type);
+        void update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow &window) const;
     };
 } // Gameplay

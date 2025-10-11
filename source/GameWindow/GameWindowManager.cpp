@@ -1,7 +1,4 @@
 #include "../../header/GameWindow/GameWindowManager.h"
-
-#include <iostream>
-
 namespace GameWindow
 {
 	GameWindowManager::GameWindowManager() { initialize(); }

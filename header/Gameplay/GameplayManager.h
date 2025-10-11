@@ -7,6 +7,10 @@
 #include <SFML/Graphics.hpp>
 
 
+namespace Event {
+    class EventPollingManager;
+}
+
 namespace Gameplay {
     class Board;
     class GameplayManager {
@@ -19,6 +23,7 @@ namespace Gameplay {
     public:
         GameplayManager(sf::RenderWindow* window);
         ~GameplayManager() = default;
+        void update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow& window);
     };
 } // Gameplay

@@ -1,15 +1,18 @@
 #pragma once
-#include "../../header/GameWindow/GameWindowManager.h"
-#include "../../header/Event/EventPollingManager.h"
-#include "../../header/UI/SplashScreen/SplashScreenManager.h"
+#include "../GameWindow/GameWindowManager.h"
+
+namespace UI {
+    class SplashScreenManager;
+}
+
+namespace Event {
+    class EventPollingManager;
+}
 
 namespace Gameplay {
     class GameplayManager;
 }
 
-using namespace GameWindow;
-using namespace Event;
-using namespace UI;
 
 enum class GameState
 {
@@ -21,12 +24,12 @@ enum class GameState
 
 class GameLoop {
 private:
-    GameWindowManager* window_manager;
-    EventPollingManager* event_manager;
+    GameWindow::GameWindowManager* window_manager;
+    Event::EventPollingManager* event_manager;
+    UI::SplashScreenManager* splash_screen_manager;
+    Gameplay::GameplayManager* game_play_manager;
 
     sf::RenderWindow* game_window;
-    SplashScreenManager* splash_screen_manager;
-    Gameplay::GameplayManager* game_play_manager;
 
     static GameState current_state;
 
