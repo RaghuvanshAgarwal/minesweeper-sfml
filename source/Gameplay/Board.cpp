@@ -4,10 +4,9 @@
 
 #include "../../header/Gameplay/Board.h"
 
-#include <iostream>
-
 #include "../../header/Gameplay/Cell.h"
 #include "../../header/Assets/AssetManager.h"
+#include "../../header/Gameplay/GameplayManager.h"
 #include "../../header/Sound/SoundManager.h"
 #include "../../header/UI/UIElements/Button/Button.h"
 
@@ -21,8 +20,9 @@ namespace Gameplay {
         sprite_.setScale(board_width_ / texture_.getSize().x, board_height_ / texture_.getSize().y);
     }
 
-    void Board::initialize(sf::RenderWindow *window) {
+    void Board::initialize(sf::RenderWindow *window, GameplayManager* gameplay_manager) {
         generator_.seed(random_device_());
+        gameplay_manager_ = gameplay_manager;
         initializeBoardImage(window);
         createBoard();
     }
@@ -96,8 +96,8 @@ namespace Gameplay {
         return p_cell_position.x >= 0 && p_cell_position.x < number_of_columns && p_cell_position.y >= 0 && p_cell_position.y < number_of_rows;
     }
 
-    Board::Board(sf::RenderWindow *window) {
-        initialize(window);
+    Board::Board(sf::RenderWindow *window, GameplayManager* gameplay_manager) {
+        initialize(window, gameplay_manager);
     }
 
     void Board::openCell(sf::Vector2i p_cell_position) {
@@ -137,12 +137,19 @@ namespace Gameplay {
         }
     }
 
+    void Board::processMineCell(sf::Vector2i p_cell_position) {
+        Sound::SoundManager::PlaySound(Sound::SoundType::EXPLOSION);
+        gameplay_manager_->setGameEnded(GameResult::LOST);
+        revealAllCells();
+    }
+
     void Board::processCellType(sf::Vector2i p_cell_position) {
         switch (cellGrid_[p_cell_position.x][p_cell_position.y]->getType()) {
             case CellType::Empty:
                 processEmtpyCell(p_cell_position);
                 break;
             case CellType::Mine:
+                processMineCell(p_cell_position);
                 break;
             default:
                 cellGrid_[p_cell_position.x][p_cell_position.y]->open();
@@ -157,6 +164,14 @@ namespace Gameplay {
         else if (p_type == UIElements::MouseButtonType::RightMouseButton) {
             Sound::SoundManager::PlaySound(Sound::SoundType::FLAG);
             toggleFlag(p_cell_position);
+        }
+    }
+
+    void Board::revealAllCells() {
+        for (int i = 0; i < number_of_rows; i++) {
+            for (int j = 0; j < number_of_columns; j++) {
+                cellGrid_[i][j]->setState(CellState::Opened);
+            }
         }
     }
 

@@ -12,7 +12,7 @@ namespace Gameplay {
     }
 
     void GameplayManager::initializeVariables() {
-        board = new Board(game_window);
+        board = new Board(game_window, this);
         if (!backgroundTexture_.loadFromFile(Asset::AssetManager::getTexture(Asset::TextureType::MinesweeperBackground))) {
             throw std::runtime_error("Failed to load background texture");
         }
@@ -23,13 +23,22 @@ namespace Gameplay {
         backgroundSprite_.setColor({255,255,255,150});
     }
 
+    bool GameplayManager::hasGameEnded() const {
+        return game_result_ != GameResult::NONE;
+    }
+
     GameplayManager::GameplayManager(sf::RenderWindow* window) {
         game_window = window;
         initialize();
     }
 
+    void GameplayManager::setGameEnded(GameResult p_result) {
+        game_result_ = p_result;
+    }
+
     void GameplayManager::update(Event::EventPollingManager &event_manager, const sf::RenderWindow &window) {
-        board->update(event_manager, window);
+        if (!hasGameEnded())
+            board->update(event_manager, window);
     }
 
     void GameplayManager::render(sf::RenderWindow &window) {
