@@ -3,6 +3,9 @@
 //
 
 #include "../../header/Gameplay/GameplayManager.h"
+
+#include <iostream>
+
 #include "../../header/Assets/AssetManager.h"
 #include "../../header/Gameplay/Board.h"
 #include "../../header/Sound/SoundManager.h"
@@ -93,7 +96,7 @@ namespace Gameplay {
     void GameplayManager::update(Event::EventPollingManager &event_manager, const sf::RenderWindow &window) {
         if (!hasGameEnded())
             handleGameplay(event_manager, window);
-        else if (board_->getBoardState() == BoardState::Completed)
+        else if (board_->getBoardState() != BoardState::Completed)
             processGameResult();
     }
 
