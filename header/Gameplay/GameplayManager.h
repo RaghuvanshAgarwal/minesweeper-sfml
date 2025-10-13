@@ -12,17 +12,42 @@ namespace Event {
 }
 
 namespace Gameplay {
+
+    enum class GameResult {
+        NONE,
+        WON,
+        LOST,
+    };
+
     class Board;
     class GameplayManager {
-        Board* board = nullptr;
+
+        const float max_level_duration = 150.f;
+        const float game_over_time = 11.f;
+
+        Board* board_ = nullptr;
         sf::RenderWindow* game_window = nullptr;
         sf::Texture backgroundTexture_;
         sf::Sprite backgroundSprite_;
+
+
+        float remaining_time_{};
+        GameResult game_result_ = GameResult::NONE;
+
+        bool hasGameEnded() const;
         void initialize();
         void initializeVariables();
+        void updateRemainingTime();
+        void processTimeOver();
+        void handleGameplay(Event::EventPollingManager &event_manager, const sf::RenderWindow &window);
+        void gameWon();
+        void gameLost();
     public:
-        GameplayManager(sf::RenderWindow* window);
+        explicit GameplayManager(sf::RenderWindow* window);
         ~GameplayManager() = default;
+        void setGameEnded(GameResult p_result);
+        void checkGameWin();
+        void processGameResult();
         void update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow& window);
     };
