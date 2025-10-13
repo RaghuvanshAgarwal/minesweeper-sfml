@@ -40,10 +40,14 @@ namespace Gameplay {
         void updateRemainingTime();
         void processTimeOver();
         void handleGameplay(Event::EventPollingManager &event_manager, const sf::RenderWindow &window);
+        void gameWon();
+        void gameLost();
     public:
         explicit GameplayManager(sf::RenderWindow* window);
         ~GameplayManager() = default;
         void setGameEnded(GameResult p_result);
+        void checkGameWin();
+        void processGameResult();
         void update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow& window);
     };

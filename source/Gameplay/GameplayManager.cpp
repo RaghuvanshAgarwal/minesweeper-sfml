@@ -5,6 +5,7 @@
 #include "../../header/Gameplay/GameplayManager.h"
 #include "../../header/Assets/AssetManager.h"
 #include "../../header/Gameplay/Board.h"
+#include "../../header/Sound/SoundManager.h"
 #include "../../header/Time/TimeManager.h"
 
 namespace Gameplay {
@@ -34,13 +35,46 @@ namespace Gameplay {
         if (remaining_time_ <= 0) {
             setGameEnded(GameResult::LOST);
             remaining_time_ = 0;
-            board_->revealAllCells();
+            board_->setBoardState(BoardState::Completed);
         }
     }
 
     void GameplayManager::handleGameplay(Event::EventPollingManager &event_manager, const sf::RenderWindow &window) {
         updateRemainingTime();
         board_->update(event_manager, window);
+        checkGameWin();
+    }
+
+    void GameplayManager::gameWon() {
+        Sound::SoundManager::PlaySound(Sound::SoundType::GAME_WON);
+        board_->flagAllMines();
+        board_->setBoardState(BoardState::Completed);
+    }
+
+    void GameplayManager::gameLost() {
+        Sound::SoundManager::PlaySound(Sound::SoundType::EXPLOSION);
+        board_->setBoardState(BoardState::Completed);
+        board_->revealAllCells();
+    }
+
+    void GameplayManager::checkGameWin() {
+        if (board_->areAllCellsOpen()) {
+            game_result_ = GameResult::WON;
+        }
+    }
+
+    void GameplayManager::processGameResult() {
+        switch (game_result_) {
+            case GameResult::LOST:
+                gameLost();
+                break;
+            case GameResult::WON:
+                gameWon();
+                break;
+            default:
+                break;
+        }
+
     }
 
     bool GameplayManager::hasGameEnded() const {
@@ -59,6 +93,8 @@ namespace Gameplay {
     void GameplayManager::update(Event::EventPollingManager &event_manager, const sf::RenderWindow &window) {
         if (!hasGameEnded())
             handleGameplay(event_manager, window);
+        else if (board_->getBoardState() == BoardState::Completed)
+            processGameResult();
     }
 
     void GameplayManager::render(sf::RenderWindow &window) {

@@ -1,7 +1,6 @@
 //
 // Created by Raghuvansh Agarwal on 08/10/25.
 //
-
 #include "../../header/Gameplay/Board.h"
 
 #include <iostream>
@@ -56,13 +55,12 @@ namespace Gameplay {
 
     void Board::populateMines(sf::Vector2i p_first_cell_position) {
         int mines = 0;
-        std::uniform_int_distribution x_dis (0, number_of_columns - 1);
-        std::uniform_int_distribution y_dis (0, number_of_rows - 1);
+        std::uniform_int_distribution x_dis (0, number_of_rows - 1);
+        std::uniform_int_distribution y_dis (0, number_of_columns - 1);
         while (mines < mines_count) {
             const int x = x_dis(generator_);
             const int y = y_dis(generator_);
-            if (p_first_cell_position.x == x && p_first_cell_position.y == y) continue;
-            if (cellGrid_[x][y]->getType() == CellType::Mine) continue;
+            if (cellGrid_[x][y]->getType() == CellType::Mine || (p_first_cell_position.x == x && p_first_cell_position.y == y)) continue;
             cellGrid_[x][y]->setType(CellType::Mine);
             mines++;
         }
@@ -102,6 +100,29 @@ namespace Gameplay {
 
     BoardState Board::getBoardState() const {
         return board_state_;
+    }
+
+    bool Board::areAllCellsOpen() const {
+        int total_valid_cells = (number_of_columns * number_of_rows) - mines_count;
+        int open_cells = 0;
+        for (const auto & i : cellGrid_) {
+            for (const auto j : i) {
+                if (j->getState() == CellState::Opened && j->getType() != CellType::Mine) {
+                    open_cells++;
+                }
+            }
+        }
+        return open_cells == total_valid_cells;
+    }
+
+    void Board::flagAllMines() {
+        for (const auto & i : cellGrid_) {
+            for (auto j : i) {
+                if (j->getType() == CellType::Mine && j->getState() != CellState::Flagged) {
+                    j->setState(CellState::Flagged);
+                }
+            }
+        }
     }
 
     void Board::setBoardState(BoardState p_boardState) {
@@ -154,11 +175,8 @@ namespace Gameplay {
         }
     }
 
-    void Board::processMineCell(sf::Vector2i p_cell_position) {
-        board_state_ = BoardState::Completed;
-        Sound::SoundManager::PlaySound(Sound::SoundType::EXPLOSION);
+    void Board::processMineCell(sf::Vector2i p_cell_position) const {
         gameplay_manager_->setGameEnded(GameResult::LOST);
-        revealAllCells();
     }
 
     void Board::processCellType(sf::Vector2i p_cell_position) {
@@ -167,17 +185,21 @@ namespace Gameplay {
                 processEmtpyCell(p_cell_position);
                 break;
             case CellType::Mine:
-                processMineCell(p_cell_position);
                 break;
             default:
                 cellGrid_[p_cell_position.x][p_cell_position.y]->open();
+                break;
         }
     }
 
     void Board::onCellButtonClick(sf::Vector2i p_cell_position, UIElements::MouseButtonType p_type) {
         if (p_type == UIElements::MouseButtonType::LeftMouseButton) {
             Sound::SoundManager::PlaySound(Sound::SoundType::BUTTON_CLICK);
-            openCell(p_cell_position);
+            if (cellGrid_[p_cell_position.x][p_cell_position.y]->getType() == CellType::Mine) {
+                processMineCell(p_cell_position);
+            }else {
+                openCell(p_cell_position);
+            }
         }
         else if (p_type == UIElements::MouseButtonType::RightMouseButton) {
             Sound::SoundManager::PlaySound(Sound::SoundType::FLAG);

@@ -44,13 +44,12 @@ namespace Gameplay {
         class GameplayManager* gameplay_manager_ = nullptr;
 
         BoardState board_state_ = BoardState::FirstCell;
-        int flaggedCells;
+        int flaggedCells{};
 
         float getCellWidth() const;
         float getCellHeight() const;
         int countMinesAround(sf::Vector2i p_cell_position);
         bool isValidCellPosition(sf::Vector2i p_cell_position);
-        BoardState getBoardState() const;
 
 
         void initialize(sf::RenderWindow* window, GameplayManager* gameplay_manager);
@@ -63,14 +62,20 @@ namespace Gameplay {
         void openCell(sf::Vector2i p_cell_position);
         void toggleFlag(sf::Vector2i p_cell_position);
         void processEmtpyCell(sf::Vector2i p_cell_position);
-        void processMineCell(sf::Vector2i p_cell_position);
+        void processMineCell(sf::Vector2i p_cell_position) const;
         void processCellType(sf::Vector2i p_cell_position);
 
-        void setBoardState(BoardState p_boardState);
     public:
         explicit Board(sf::RenderWindow* window, GameplayManager* gameplay_manager);
+
+
+        BoardState getBoardState() const;
+        bool areAllCellsOpen() const;
+
+        void setBoardState(BoardState p_boardState);
         void onCellButtonClick(sf::Vector2i p_cell_position, UIElements::MouseButtonType p_type);
         void revealAllCells();
+        void flagAllMines();
         void update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow &window) const;
     };
