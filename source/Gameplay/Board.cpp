@@ -4,6 +4,8 @@
 
 #include "../../header/Gameplay/Board.h"
 
+#include <iostream>
+
 #include "../../header/Gameplay/Cell.h"
 #include "../../header/Assets/AssetManager.h"
 #include "../../header/Gameplay/GameplayManager.h"
@@ -23,6 +25,7 @@ namespace Gameplay {
     void Board::initialize(sf::RenderWindow *window, GameplayManager* gameplay_manager) {
         generator_.seed(random_device_());
         gameplay_manager_ = gameplay_manager;
+        board_state_ = BoardState::FirstCell;
         initializeBoardImage(window);
         createBoard();
     }
@@ -44,21 +47,21 @@ namespace Gameplay {
                 cellGrid_[i][j] = new Cell(cell_width, cell_height, sf::Vector2i(i, j), this);
             }
         }
-        populateBoard();
     }
 
-    void Board::populateBoard() {
-        populateMines();
+    void Board::populateBoard(sf::Vector2i p_first_cell_position) {
+        populateMines(p_first_cell_position);
         populateCells();
     }
 
-    void Board::populateMines() {
+    void Board::populateMines(sf::Vector2i p_first_cell_position) {
         int mines = 0;
         std::uniform_int_distribution x_dis (0, number_of_columns - 1);
         std::uniform_int_distribution y_dis (0, number_of_rows - 1);
         while (mines < mines_count) {
             const int x = x_dis(generator_);
             const int y = y_dis(generator_);
+            if (p_first_cell_position.x == x && p_first_cell_position.y == y) continue;
             if (cellGrid_[x][y]->getType() == CellType::Mine) continue;
             cellGrid_[x][y]->setType(CellType::Mine);
             mines++;
@@ -96,14 +99,28 @@ namespace Gameplay {
         return p_cell_position.x >= 0 && p_cell_position.x < number_of_columns && p_cell_position.y >= 0 && p_cell_position.y < number_of_rows;
     }
 
+
+    BoardState Board::getBoardState() const {
+        return board_state_;
+    }
+
+    void Board::setBoardState(BoardState p_boardState) {
+        board_state_ = p_boardState;
+    }
+
     Board::Board(sf::RenderWindow *window, GameplayManager* gameplay_manager) {
         initialize(window, gameplay_manager);
     }
 
     void Board::openCell(sf::Vector2i p_cell_position) {
-        if (Cell* cell = cellGrid_[p_cell_position.x][p_cell_position.y]; cell->canOpen()) {
-            processCellType(p_cell_position);
+        if (Cell* cell = cellGrid_[p_cell_position.x][p_cell_position.y]; !cell->canOpen()) {
+            return;
         }
+        if (board_state_ == BoardState::FirstCell) {
+            populateBoard(p_cell_position);
+            board_state_ = BoardState::Playing;
+        }
+        processCellType(p_cell_position);
     }
 
     void Board::toggleFlag(sf::Vector2i p_cell_position) {
@@ -138,6 +155,7 @@ namespace Gameplay {
     }
 
     void Board::processMineCell(sf::Vector2i p_cell_position) {
+        board_state_ = BoardState::Completed;
         Sound::SoundManager::PlaySound(Sound::SoundType::EXPLOSION);
         gameplay_manager_->setGameEnded(GameResult::LOST);
         revealAllCells();
