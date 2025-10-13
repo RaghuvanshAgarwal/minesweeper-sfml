@@ -21,14 +21,25 @@ namespace Gameplay {
 
     class Board;
     class GameplayManager {
-        Board* board = nullptr;
+
+        const float max_level_duration = 150.f;
+        const float game_over_time = 11.f;
+
+        Board* board_ = nullptr;
         sf::RenderWindow* game_window = nullptr;
         sf::Texture backgroundTexture_;
         sf::Sprite backgroundSprite_;
+
+
+        float remaining_time_{};
         GameResult game_result_ = GameResult::NONE;
+
+        bool hasGameEnded() const;
         void initialize();
         void initializeVariables();
-        bool hasGameEnded() const;
+        void updateRemainingTime();
+        void processTimeOver();
+        void handleGameplay(Event::EventPollingManager &event_manager, const sf::RenderWindow &window);
     public:
         explicit GameplayManager(sf::RenderWindow* window);
         ~GameplayManager() = default;
