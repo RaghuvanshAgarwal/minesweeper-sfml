@@ -52,7 +52,6 @@ namespace Gameplay {
         bool isValidCellPosition(sf::Vector2i p_cell_position);
 
 
-        void initialize(sf::RenderWindow* window, GameplayManager* gameplay_manager);
         void initializeBoardImage(const sf::RenderWindow* window);
         void createBoard();
         void populateBoard(sf::Vector2i p_first_cell_position);
@@ -71,7 +70,9 @@ namespace Gameplay {
 
         BoardState getBoardState() const;
         bool areAllCellsOpen() const;
+        int getFlagCount() const;
 
+        void initialize(sf::RenderWindow* window, GameplayManager* gameplay_manager);
         void setBoardState(BoardState p_boardState);
         void onCellButtonClick(sf::Vector2i p_cell_position, UIElements::MouseButtonType p_type);
         void revealAllCells();

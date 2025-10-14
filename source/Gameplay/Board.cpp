@@ -25,7 +25,7 @@ namespace Gameplay {
         generator_.seed(random_device_());
         gameplay_manager_ = gameplay_manager;
         board_state_ = BoardState::FirstCell;
-        initializeBoardImage(window);
+        flaggedCells = 0;
         createBoard();
     }
 
@@ -115,6 +115,10 @@ namespace Gameplay {
         return open_cells == total_valid_cells;
     }
 
+    int Board::getFlagCount() const {
+        return flaggedCells;
+    }
+
     void Board::flagAllMines() {
         for (const auto & i : cellGrid_) {
             for (auto j : i) {
@@ -130,6 +134,7 @@ namespace Gameplay {
     }
 
     Board::Board(sf::RenderWindow *window, GameplayManager* gameplay_manager) {
+        initializeBoardImage(window);
         initialize(window, gameplay_manager);
     }
 
