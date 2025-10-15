@@ -11,6 +11,7 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/System/Vector2.hpp"
 
+
 namespace Event {
     class EventPollingManager;
 }
@@ -22,6 +23,7 @@ namespace sf {
 namespace UIElements {
     class Button;
     class Text;
+    enum class MouseButtonType;
 }
 
 namespace Gameplay {
@@ -56,7 +58,7 @@ namespace UI {
         sf::Sprite flag_count_sprite_;
         sf::Sprite remaining_timer_sprite_;
 
-        std::function<void()> on_reset_btn_clicked_ = nullptr;
+        std::function<void(UIElements::MouseButtonType)> on_reset_btn_clicked_ = nullptr;
         void updateFlagCounter() const;
         void updateRemainingTimer();
 
@@ -66,7 +68,7 @@ namespace UI {
     public:
         GameplayUI(Gameplay::Board* p_board, Gameplay::GameplayManager* p_manager);
         ~GameplayUI();
-        void registerResetButtonClicked(std::function<void()> p_callback);
+        void registerResetButtonClicked(std::function<void(UIElements::MouseButtonType)> p_callback);
         void update(Event::EventPollingManager &event_manager, const sf::RenderWindow &window);
         void render(sf::RenderWindow& window) const;
     };

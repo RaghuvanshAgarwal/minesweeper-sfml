@@ -129,6 +129,16 @@ namespace Gameplay {
         }
     }
 
+    void Board::reset() {
+        flaggedCells = 0;
+        setBoardState(BoardState::FirstCell);
+        for (const auto & cellRow : cellGrid_) {
+            for (auto cell : cellRow) {
+                cell->reset();
+            }
+        }
+    }
+
     void Board::setBoardState(BoardState p_boardState) {
         board_state_ = p_boardState;
     }

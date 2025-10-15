@@ -11,6 +11,7 @@
 #include "../../header/Sound/SoundManager.h"
 #include "../../header/Time/TimeManager.h"
 #include "../../header/UI/GameplayUI/GameplayUI.h"
+#include "../../header/UI/UIElements/Button/Button.h"
 
 namespace Gameplay {
     void GameplayManager::initialize() {
@@ -21,11 +22,11 @@ namespace Gameplay {
         board_ = new Board(game_window, this);
         remaining_time_ = max_level_duration;
         gui_ = new UI::GameplayUI(board_, this);
-        gui_->registerResetButtonClicked([this]() {
-            Sound::SoundManager::PlaySound(Sound::SoundType::BUTTON_CLICK);
-            board_->initialize(game_window, this);
-            game_result_ = GameResult::NONE;
-            remaining_time_ = max_level_duration;
+        gui_->registerResetButtonClicked([this](UIElements::MouseButtonType p_button) {
+            if (p_button == UIElements::MouseButtonType::LeftMouseButton) {
+                Sound::SoundManager::PlaySound(Sound::SoundType::BUTTON_CLICK);
+                restartGame();
+            }
         });
         if (!backgroundTexture_.loadFromFile(Asset::AssetManager::getTexture(Asset::TextureType::MinesweeperBackground))) {
             throw std::runtime_error("Failed to load background texture");
@@ -87,6 +88,13 @@ namespace Gameplay {
                 break;
         }
 
+    }
+
+    void GameplayManager::restartGame() {
+        game_result_ = GameResult::NONE;
+        remaining_time_ = max_level_duration;
+        Time::TimeManager::initialize();
+        board_->reset();
     }
 
     bool GameplayManager::hasGameEnded() const {

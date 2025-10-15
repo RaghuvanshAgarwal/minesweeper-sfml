@@ -54,6 +54,7 @@ namespace Gameplay {
         void setGameEnded(GameResult p_result);
         void checkGameWin();
         void processGameResult();
+        void restartGame();
         void update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow& window);
     };

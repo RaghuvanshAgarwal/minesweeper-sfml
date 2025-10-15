@@ -68,7 +68,7 @@ namespace UI {
         remaining_timer_ = new UIElements::Text("000", remaining_time_position_,font_size_,color_, font_type_);
         reset_button_ = new UIElements::Button(Asset::AssetManager::getTexture(Asset::TextureType::RestartButton),reset_button_position_,reset_button_size_);
         reset_button_->registerCallback([this](UIElements::MouseButtonType p_button) {
-            if (on_reset_btn_clicked_) on_reset_btn_clicked_();
+            if (on_reset_btn_clicked_) on_reset_btn_clicked_(p_button);
         });
         if (!text_background_texture_.loadFromFile(Asset::AssetManager::getTexture(Asset::TextureType::Cell))) {
             std::cerr << "Failed to load background texture" << std::endl;
@@ -84,7 +84,7 @@ namespace UI {
         delete reset_button_;
     }
 
-    void GameplayUI::registerResetButtonClicked(std::function<void()> p_callback) {
+    void GameplayUI::registerResetButtonClicked(std::function<void(UIElements::MouseButtonType)> p_callback) {
         on_reset_btn_clicked_ = p_callback;
     }
 

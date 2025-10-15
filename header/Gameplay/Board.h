@@ -16,6 +16,7 @@ namespace UIElements {
 }
 
 namespace Gameplay {
+    class GameplayManager;
 
     enum class BoardState {
         FirstCell,
@@ -41,7 +42,7 @@ namespace Gameplay {
         sf::Texture texture_;
         sf::Sprite sprite_;
         class Cell* cellGrid_[number_of_rows][number_of_columns]{};
-        class GameplayManager* gameplay_manager_ = nullptr;
+        GameplayManager* gameplay_manager_ = nullptr;
 
         BoardState board_state_ = BoardState::FirstCell;
         int flaggedCells{};
@@ -77,6 +78,7 @@ namespace Gameplay {
         void onCellButtonClick(sf::Vector2i p_cell_position, UIElements::MouseButtonType p_type);
         void revealAllCells();
         void flagAllMines();
+        void reset();
         void update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow &window) const;
     };
