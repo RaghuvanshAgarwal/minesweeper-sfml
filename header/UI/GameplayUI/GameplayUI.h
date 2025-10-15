@@ -34,9 +34,9 @@ namespace Gameplay {
 namespace UI {
     class GameplayUI {
 
-        const Asset::FontType font_type_ = Asset::FontType::BubbleBobble;
+        const Asset::FontType font_type_ = Asset::FontType::DsDigib;
         const sf::Color color_ = sf::Color::Red;
-        const int font_size_ = 80;
+        const int font_size_ = 75;
         const sf::Vector2f text_background_sprite_size = sf::Vector2f(150, 150);
 
         const sf::Vector2f flag_count_position_ = sf::Vector2f(668, 85);

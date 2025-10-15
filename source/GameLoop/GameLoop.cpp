@@ -5,6 +5,7 @@
 #include "../../header/GameWindow/GameWindowManager.h"
 #include "../../header/Event/EventPollingManager.h"
 #include "../../header/UI/SplashScreen/SplashScreenManager.h"
+#include "../../header/UI/MainMenu/MainMenuManager.h"
 
 GameState GameLoop::current_state = GameState::SPLASH_SCREEN;
 
@@ -17,6 +18,7 @@ void GameLoop::initialize() {
     event_manager = new Event::EventPollingManager(game_window);
     game_play_manager = new Gameplay::GameplayManager(game_window);
     splash_screen_manager = new UI::SplashScreenManager(game_window);
+    main_menu_manager = new UI::MainMenuManager(*game_window);
 
     // Initialize Sounds:
     Sound::SoundManager::Initialize();
@@ -43,6 +45,7 @@ void GameLoop::update() {
             splash_screen_manager->update();
             break;
         case GameState::MAIN_MENU:
+            main_menu_manager->update(*event_manager,*game_window);
             break;
         case GameState::GAMEPLAY:
             game_play_manager->update(*event_manager, *game_window);
@@ -62,9 +65,12 @@ void GameLoop::render() {
             splash_screen_manager->render();
             break;
         case GameState::MAIN_MENU:
+            main_menu_manager->render(*game_window);
             break;
         case GameState::GAMEPLAY:
             game_play_manager->render(*game_window);
+            break;
+        case GameState::EXIT:
             break;
         default:
             throw std::runtime_error("Invalid state");

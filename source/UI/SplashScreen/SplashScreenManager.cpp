@@ -30,8 +30,9 @@ namespace UI
 
     sf::Vector2f SplashScreenManager::getLogoPosition()
     {
-        float x_position = (game_window->getSize().x - logo_width) / 2.0f;
-        float y_position = (game_window->getSize().y - logo_height) / 2.0f;
+
+        float x_position = (game_window->getSize().x - logo_texture.getSize().x) / 2.0f;
+        float y_position = (game_window->getSize().y - logo_texture.getSize().y) / 2.0f;
         return { x_position, y_position };
     }
 
@@ -44,7 +45,7 @@ namespace UI
         else
         {
             elapsed_time = 0.0f;
-            GameLoop::setGameState(GameState::GAMEPLAY);
+            GameLoop::setGameState(GameState::MAIN_MENU);
         }
     }
 }

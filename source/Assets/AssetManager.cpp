@@ -25,7 +25,7 @@ namespace Asset {
         {TextureType::Instruction, "assets/textures/instructions_button.png"},
         {TextureType::MenuButton, "assets/textures/menu_button.png"},
         {TextureType::MinesweeperBackground , "assets/textures/minesweeper_bg.png"},
-        {TextureType::Logo, "assets/textures/outscal_logo.png"},
+        {TextureType::Logo, "assets/textures/logo.png"},
         {TextureType::PlayButton, "assets/textures/play_button.png"},
         {TextureType::QuitButton, "assets/textures/quit_button.png"},
         {TextureType::RestartButton,"assets/textures/restart_button.png"}
