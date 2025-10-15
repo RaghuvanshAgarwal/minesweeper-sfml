@@ -7,6 +7,10 @@
 #include <SFML/Graphics.hpp>
 
 
+namespace UI {
+    class GameplayUI;
+}
+
 namespace Event {
     class EventPollingManager;
 }
@@ -26,6 +30,7 @@ namespace Gameplay {
         const float game_over_time = 11.f;
 
         Board* board_ = nullptr;
+        UI::GameplayUI* gui_ = nullptr;
         sf::RenderWindow* game_window = nullptr;
         sf::Texture backgroundTexture_;
         sf::Sprite backgroundSprite_;
@@ -45,9 +50,11 @@ namespace Gameplay {
     public:
         explicit GameplayManager(sf::RenderWindow* window);
         ~GameplayManager() = default;
+        float getRemainingTime() const;
         void setGameEnded(GameResult p_result);
         void checkGameWin();
         void processGameResult();
+        void restartGame();
         void update(Event::EventPollingManager &event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow& window);
     };

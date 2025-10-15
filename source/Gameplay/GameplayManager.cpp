@@ -10,6 +10,8 @@
 #include "../../header/Gameplay/Board.h"
 #include "../../header/Sound/SoundManager.h"
 #include "../../header/Time/TimeManager.h"
+#include "../../header/UI/GameplayUI/GameplayUI.h"
+#include "../../header/UI/UIElements/Button/Button.h"
 
 namespace Gameplay {
     void GameplayManager::initialize() {
@@ -19,6 +21,13 @@ namespace Gameplay {
     void GameplayManager::initializeVariables() {
         board_ = new Board(game_window, this);
         remaining_time_ = max_level_duration;
+        gui_ = new UI::GameplayUI(board_, this);
+        gui_->registerResetButtonClicked([this](UIElements::MouseButtonType p_button) {
+            if (p_button == UIElements::MouseButtonType::LeftMouseButton) {
+                Sound::SoundManager::PlaySound(Sound::SoundType::BUTTON_CLICK);
+                restartGame();
+            }
+        });
         if (!backgroundTexture_.loadFromFile(Asset::AssetManager::getTexture(Asset::TextureType::MinesweeperBackground))) {
             throw std::runtime_error("Failed to load background texture");
         }
@@ -46,6 +55,7 @@ namespace Gameplay {
         updateRemainingTime();
         board_->update(event_manager, window);
         checkGameWin();
+
     }
 
     void GameplayManager::gameWon() {
@@ -80,6 +90,13 @@ namespace Gameplay {
 
     }
 
+    void GameplayManager::restartGame() {
+        game_result_ = GameResult::NONE;
+        remaining_time_ = max_level_duration;
+        Time::TimeManager::initialize();
+        board_->reset();
+    }
+
     bool GameplayManager::hasGameEnded() const {
         return game_result_ != GameResult::NONE;
     }
@@ -87,6 +104,10 @@ namespace Gameplay {
     GameplayManager::GameplayManager(sf::RenderWindow *window) {
         game_window = window;
         initialize();
+    }
+
+    float GameplayManager::getRemainingTime() const {
+        return remaining_time_;
     }
 
     void GameplayManager::setGameEnded(GameResult p_result) {
@@ -98,10 +119,13 @@ namespace Gameplay {
             handleGameplay(event_manager, window);
         else if (board_->getBoardState() != BoardState::Completed)
             processGameResult();
+
+        gui_->update(event_manager, window);
     }
 
     void GameplayManager::render(sf::RenderWindow &window) {
         window.draw(backgroundSprite_);
         board_->render(window);
+        gui_->render(window);
     }
 } // Gameplay

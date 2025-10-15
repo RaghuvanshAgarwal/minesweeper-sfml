@@ -36,6 +36,10 @@ add_executable(minesweeper_sfml main.cpp
         header/UI/UIElements/Button/Button.h
         source/Gameplay/Cell.cpp
         header/Gameplay/Cell.h
+        source/UI/UIElements/Text/Text.cpp
+        header/UI/UIElements/Text/Text.h
+        source/UI/GameplayUI/GameplayUI.cpp
+        header/UI/GameplayUI/GameplayUI.h
 )
 target_compile_features(minesweeper_sfml PRIVATE cxx_std_17)
 target_link_libraries(minesweeper_sfml PRIVATE sfml-graphics sfml-audio)

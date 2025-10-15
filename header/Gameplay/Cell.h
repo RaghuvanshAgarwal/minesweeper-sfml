@@ -65,7 +65,7 @@ namespace Gameplay {
 
         bool canFlag() const;
         void toggleFlag();
-
+        void reset();
 
         void update(Event::EventPollingManager& event_manager, const sf::RenderWindow& window);
         void render(sf::RenderWindow& window) const;

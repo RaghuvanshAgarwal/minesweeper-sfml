@@ -99,6 +99,11 @@ namespace Gameplay {
         }
     }
 
+    void Cell::reset() {
+        setState(CellState::Hidden);
+        setType(CellType::Empty);
+    }
+
     void Cell::update(Event::EventPollingManager &event_manager, const sf::RenderWindow &window) {
         button_->handleButtonInteractions(event_manager, window);
     }
